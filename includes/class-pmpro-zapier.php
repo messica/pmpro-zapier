@@ -40,7 +40,7 @@ class PMPro_Zapier {
 		// Add some extra data to the result.
 		$data = array();
 
-		$user  = get_userdata( $order->user_id, 'user id' );
+		$user  = get_userdata( $order->user_id );
 
 		$data['username'] = $user->user_login;
 
@@ -65,7 +65,7 @@ class PMPro_Zapier {
 		// Add some extra data to the result.
 		$data = array();
 
-		$user  = get_userdata( $order->user_id, 'user id' );
+		$user  = get_userdata( $order->user_id );
 
 		$data['username'] = $user->user_login;
 
@@ -82,7 +82,7 @@ class PMPro_Zapier {
 		global $wpdb;
 
 		// Get user and level object.
-		$user  = get_userdata( $user_id, 'user id' );
+		$user  = get_userdata( $user_id );
 
 		// Cancelling
 		if($level_id == 0) {
