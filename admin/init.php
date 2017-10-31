@@ -2,7 +2,7 @@
 
 // Setup admin page.
 function pmproz_admin_menu() {
-	add_submenu_page( 'pmpro-membershiplevels', __( 'PMPro Zapier Settings', 'pmproz' ), __( 'PMPro Zapier', 'pmproz' ), 'manage_options', 'pmpro-zapier', 'pmproz_add_submenu_page' );
+	add_submenu_page( 'pmpro-membershiplevels', __( 'PMPro Zapier Settings', 'pmpro-zapier' ), __( 'PMPro Zapier', 'pmpro-zapier' ), 'manage_options', 'pmpro-zapier', 'pmproz_add_submenu_page' );
 }
 
 add_action( 'admin_menu', 'pmproz_admin_menu' );
@@ -17,19 +17,19 @@ function pmproz_admin_init() {
 	register_setting( 'pmproz_options', 'pmproz_options', 'pmproz_options_validate' );
 
 	// Add sections.
-	add_settings_section( 'pmproz_settings_general', __( 'Account Settings', 'pmproz' ), 'pmproz_settings_general', 'pmproz_options' );
-	add_settings_section( 'pmproz_settings_triggers', __( 'Triggers', 'pmproz' ), 'pmproz_settings_triggers', 'pmproz_options' );
+	add_settings_section( 'pmproz_settings_general', __( 'Account Settings', 'pmpro-zapier' ), 'pmproz_settings_general', 'pmproz_options' );
+	add_settings_section( 'pmproz_settings_triggers', __( 'Triggers', 'pmpro-zapier' ), 'pmproz_settings_triggers', 'pmproz_options' );
 
 	// Add general fields.
-	add_settings_field( 'pmproz_settings_field_api_key', __( 'API Key', 'pmproz' ), 'pmproz_settings_field_api_key', 'pmproz_options', 'pmproz_settings_general' );
+	add_settings_field( 'pmproz_settings_field_api_key', __( 'API Key', 'pmpro-zapier' ), 'pmproz_settings_field_api_key', 'pmproz_options', 'pmproz_settings_general' );
 
 	// Add trigger fields.
-	add_settings_field( 'pmproz_settings_field_pmpro_added_order', __( 'New Order', 'pmproz' ), 'pmproz_settings_field_pmpro_added_order', 'pmproz_options', 'pmproz_settings_triggers' );
-	add_settings_field( 'pmproz_settings_field_pmpro_added_order_url', __( 'New Order Webhook URL', 'pmproz' ), 'pmproz_settings_field_pmpro_added_order_url', 'pmproz_options', 'pmproz_settings_triggers' );
-	add_settings_field( 'pmproz_settings_field_pmpro_updated_order', __( 'Updated Order', 'pmproz' ), 'pmproz_settings_field_pmpro_updated_order', 'pmproz_options', 'pmproz_settings_triggers' );
-	add_settings_field( 'pmproz_settings_field_pmpro_updated_order_url', __( 'Updated Order Webhook URL', 'pmproz' ), 'pmproz_settings_field_pmpro_updated_order_url', 'pmproz_options', 'pmproz_settings_triggers' );
+	add_settings_field( 'pmproz_settings_field_pmpro_added_order', __( 'New Order', 'pmpro-zapier' ), 'pmproz_settings_field_pmpro_added_order', 'pmproz_options', 'pmproz_settings_triggers' );
+	add_settings_field( 'pmproz_settings_field_pmpro_added_order_url', __( 'New Order Webhook URL', 'pmpro-zapier' ), 'pmproz_settings_field_pmpro_added_order_url', 'pmproz_options', 'pmproz_settings_triggers' );
+	add_settings_field( 'pmproz_settings_field_pmpro_updated_order', __( 'Updated Order', 'pmpro-zapier' ), 'pmproz_settings_field_pmpro_updated_order', 'pmproz_options', 'pmproz_settings_triggers' );
+	add_settings_field( 'pmproz_settings_field_pmpro_updated_order_url', __( 'Updated Order Webhook URL', 'pmpro-zapier' ), 'pmproz_settings_field_pmpro_updated_order_url', 'pmproz_options', 'pmproz_settings_triggers' );
 	add_settings_field( 'pmproz_settings_field_pmpro_after_change_membership_level', __( 'Changed Membership Level', 'pmproz' ), 'pmproz_settings_field_pmpro_after_change_membership_level', 'pmproz_options', 'pmproz_settings_triggers' );
-	add_settings_field( 'pmproz_settings_field_pmpro_after_change_membership_level_url', __( 'Changed Membership Level Webhook URL', 'pmproz' ), 'pmproz_settings_field_pmpro_after_change_membership_level_url', 'pmproz_options', 'pmproz_settings_triggers' );
+	add_settings_field( 'pmproz_settings_field_pmpro_after_change_membership_level_url', __( 'Changed Membership Level Webhook URL', 'pmpro-zapier' ), 'pmproz_settings_field_pmpro_after_change_membership_level_url', 'pmproz_options', 'pmproz_settings_triggers' );
 
 }
 
