@@ -19,7 +19,7 @@ class PMPro_Zapier {
 		), 10, 3 );
 
 		// Load text domain.
-		load_plugin_textdomain( 'pmproz' );
+		load_plugin_textdomain( 'pmpro-zapier' );
 
 		// Get PMPro Zapier settings.
 		$this->options = get_option( 'pmproz_options' );
@@ -113,7 +113,7 @@ class PMPro_Zapier {
 		$data['user_email'] = $user->user_email;
 
 		// Get old level's status so we know why they changed levels.
-		$sqlQuery                = "SELECT status FROM {$wpdb->pmpro_memberships_users} WHERE user_id = {$user_id} AND status NOT LIKE 'active' ORDER BY id DESC LIMIT 1";
+		$sqlQuery = "SELECT status FROM {$wpdb->pmpro_memberships_users} WHERE user_id = {$user_id} AND status NOT LIKE 'active' ORDER BY id DESC LIMIT 1";
 		$data['old_level_status']        = $wpdb->get_var( $sqlQuery );
 
 		$data['level'] = $level;
@@ -138,8 +138,8 @@ class PMPro_Zapier {
 		$r = wp_remote_post( $this->webhook_url, $args );
 
 		if ( is_wp_error( $r ) )
-			pmpro_setMessage( __( 'An error occurred: ', 'pmproz' ) . $r->get_error_message(), 'pmpro_error' );
-
+			pmpro_setMessage( __( 'An error occurred: ', 'pmpro-zapier' ) . $r->get_error_message(), 'pmpro_error' );
+		
 		return $r;
 	}
 }
