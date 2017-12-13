@@ -12,7 +12,7 @@ function pmproz_settings_general() {
 		<tr>
 			<th scope="row"><?php _e( 'Webhook Handler', 'pmpro-zapier' ); ?></th>
 			<td>
-				<input type="text" readonly size=100 value="<?php echo plugins_url('/includes/webhook-handler.php', __DIR__ ); ?>">
+				<input type="text" readonly size=100 value="<?php echo PMPROZ_PLUGIN_URL . 'includes/webhook-handler.php'; ?>">
 			</td>
 		</tr>
 	</table>

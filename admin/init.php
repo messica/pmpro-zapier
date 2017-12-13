@@ -1,12 +1,17 @@
 <?php
 
-// Setup admin page.
+/**
+ * Add PMPro Zapier Settings page to the admin menu
+ * Uses admin_menu hook
+ */
 function pmproz_admin_menu() {
 	add_submenu_page( 'pmpro-membershiplevels', __( 'PMPro Zapier Settings', 'pmpro-zapier' ), __( 'PMPro Zapier', 'pmpro-zapier' ), 'manage_options', 'pmpro-zapier', 'pmproz_add_submenu_page' );
 }
-
 add_action( 'admin_menu', 'pmproz_admin_menu' );
 
+/**
+ * Load the Zapier Settings page when the menu item is clicked on
+ */
 function pmproz_add_submenu_page() {
 	require_once( dirname( __FILE__ ) . '/settings.php' );
 }
@@ -32,7 +37,6 @@ function pmproz_admin_init() {
 	add_settings_field( 'pmproz_settings_field_pmpro_after_change_membership_level_url', __( 'Changed Membership Level Webhook URL', 'pmpro-zapier' ), 'pmproz_settings_field_pmpro_after_change_membership_level_url', 'pmproz_options', 'pmproz_settings_triggers' );
 
 }
-
 add_action( 'admin_init', 'pmproz_admin_init' );
 
 function pmproz_options_validate( $input ) {

@@ -14,7 +14,6 @@ if ( empty( $pmproz_options ) ) {
 	$pmproz_options = get_option( 'pmproz_options' );
 }
 
-$data    = json_decode( file_get_contents( 'php://input' ) );
 $api_key = ! empty( $_REQUEST['api_key'] ) ? sanitize_key( $_REQUEST['api_key'] ) : '';
 $action  = ! empty( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : '';
 
@@ -26,24 +25,51 @@ if ( $api_key != $pmproz_options['api_key'] ) {
 	exit;
 }
 
+//for debugging
+if ( defined( 'PMPRO_ZAPIER_DEBUG' ) ) {	
+	$logstr = var_export($_REQUEST, true);
+	
+	if ( strpos( PMPRO_ZAPIER_DEBUG, "@" ) ) {
+		$log_email = PMPRO_ZAPIER_DEBUG;
+	} else {
+		$log_email = get_option( "admin_email" );
+	}
+	
+	wp_mail( $log_email, get_option( "blogname" ) . " Zapier Log", nl2br( $logstr ) );			
+}
 
 switch ( $action ) {
 
 	case 'change_membership_level':
 
-		if ( is_numeric( $data->user ) ) {
-			$user = get_userdata( $data->user );
-		} elseif ( get_user_by( 'login', $data->user ) ) {
-			$user = get_user_by( 'login', $data->user );
+		//need a user id, login, or email address and a membership level id
+		$user_id = pmpro_getParam('user_id', 'POST', NULL, 'intval');
+		$user_login = pmpro_getParam('user_login', 'POST', NULL, 'sanitize_user');
+		$user_email = pmpro_getParam('user_email', 'POST', NULL, 'sanitize_email');
+		$level_id = pmpro_getParam('level_id', 'POST', NULL, 'intval');
+		
+		//old level status
+		$old_level_status = pmpro_getParam('old_level_status', 'POST', 'zapier_changed');
+		
+		$pmpro_error = '';
+		
+		//check for user
+		if ( !empty($user_id) ) {
+			$user = get_userdata( $user_id );
+		} elseif ( !empty($user_login) ) {
+			$user = get_user_by( 'login', $user_login );
+		} elseif ( !empty($user_email) ) {
+			$user = get_user_by( 'email', $user_email );
 		} else {
-			$user = get_user_by( 'email', $data->user );
+			$pmpro_error .= 'You must pass in a user_id, user_login, or user_email. ';
 		}
-
-		$user_id          = $user->ID;
-		$level            = $data->level;
-		$old_level_status = ! empty( $data->status ) ? $data->status : 'zapier_changed';
-
-		if ( pmpro_changeMembershipLevel( $level, $user_id, $old_level_status ) ) {
+		
+		//check the level
+		if( empty( $level_id ) && $level_id !== '0' ) {
+			$pmpro_error .= 'You must pass in a new level_id or 0. ';
+		}
+		
+		if ( empty($pmpro_error) && pmpro_changeMembershipLevel( $level_id, $user_id, $old_level_status ) ) {
 			echo json_encode( array( 'status' => 'success' ) );
 		} else {
 			echo json_encode( array( 'status' => 'failed', 'message' => $pmpro_error ) );
