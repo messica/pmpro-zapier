@@ -43,24 +43,16 @@ switch ( $action ) {
 	case 'change_membership_level':
 
 		//need a user id, login, or email address and a membership level id
-		$user_id = pmpro_getParam('user_id', 'POST', NULL, 'intval');
-		$user_login = pmpro_getParam('user_login', 'POST', NULL, 'sanitize_user');
-		$user_email = pmpro_getParam('user_email', 'POST', NULL, 'sanitize_email');
-		$level_id = pmpro_getParam('level_id', 'POST', NULL, 'intval');
+		$user = pmproz_get_user_data();
+		$level_id = intval( pmpro_getParam( 'level_id' ) );
 		
 		//old level status
-		$old_level_status = pmpro_getParam('old_level_status', 'POST', 'zapier_changed');
+		$old_level_status = pmpro_getParam('old_level_status', 'REQUEST', 'zapier_changed');
 		
 		$pmpro_error = '';
-		
-		//check for user
-		if ( !empty($user_id) ) {
-			$user = get_userdata( $user_id );
-		} elseif ( !empty($user_login) ) {
-			$user = get_user_by( 'login', $user_login );
-		} elseif ( !empty($user_email) ) {
-			$user = get_user_by( 'email', $user_email );
-		} else {
+
+		// failed to get the user object.
+		if( empty( $user ) ){
 			$pmpro_error .= 'You must pass in a user_id, user_login, or user_email. ';
 		}
 		
@@ -72,6 +64,7 @@ switch ( $action ) {
 		if ( empty($pmpro_error) && pmpro_changeMembershipLevel( $level_id, $user_id, $old_level_status ) ) {
 			echo json_encode( array( 'status' => 'success' ) );
 		} else {
+
 			echo json_encode( array( 'status' => 'failed', 'message' => $pmpro_error ) );
 		}
 
@@ -79,13 +72,7 @@ switch ( $action ) {
 
 	case 'add_order':
 
-		if ( is_numeric( $data->user ) ) {
-			$user = get_userdata( $data->user );
-		} elseif ( get_user_by( 'login', $data->user ) ) {
-			$user = get_user_by( 'login', $data->user );
-		} else {
-			$user = get_user_by( 'email', $data->user );
-		}
+		$user = pmproz_get_user_data();
 
 		$order                = new MemberOrder();
 		$order->user_id       = $user->ID;
@@ -150,18 +137,12 @@ switch ( $action ) {
 
 	case 'has_membership_level':
 
-		if ( is_numeric( $data->user ) ) {
-			$user = get_userdata( $data->user );
-		} elseif ( get_user_by( 'login', $data->user ) ) {
-			$user = get_user_by( 'login', $data->user );
-		} else {
-			$user = get_user_by( 'email', $data->user );
-		}
+		$user = pmproz_get_user_data();
 
 		$user_id = $user->ID;
-		$level   = $data->level;
+		$level_id = intval( pmpro_getParam( 'level_id' ) );
 
-		if ( pmpro_hasMembershipLevel( $level, $user_id ) ) {
+		if ( pmpro_hasMembershipLevel( $level_id, $user_id ) ) {
 			echo json_encode( 'true' );
 		} else {
 			echo json_encode( 'false' );
@@ -172,4 +153,26 @@ switch ( $action ) {
 	default:
 		//testing connection
 		break;
+}
+
+/**
+ * Helper function to retrieve the user object.
+ * @return user (object)
+ */
+function pmproz_get_user_data(){
+
+		$user_id = intval( pmpro_getParam( 'user_id' ) );
+		$user_login = sanitize_user( pmpro_getParam( 'user_login' ) );
+		$user_email = sanitize_email( pmpro_getParam('user_email' ) );
+
+		if ( !empty($user_id) ) {
+			$user = get_userdata( $user_id );
+		} elseif ( !empty($user_login) ) {
+			$user = get_user_by( 'login', $user_login );
+		} elseif ( !empty($user_email) ) {
+			$user = get_user_by( 'email', $user_email );
+		}
+
+		return $user;
+
 }
