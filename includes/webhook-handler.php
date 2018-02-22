@@ -21,7 +21,7 @@ header( 'Content-Type: application/json' );
 
 if ( $api_key != $pmproz_options['api_key'] ) {
 	status_header( 403 );
-	echo json_encode( __( 'A valid API key is required.', 'pmproz' ) );
+	echo json_encode( __( 'A valid API key is required.', 'pmpro-zapier' ) );
 	exit;
 }
 
@@ -53,7 +53,7 @@ switch ( $action ) {
 
 		// failed to get the user object.
 		if( empty( $user ) ){
-			$pmpro_error .= 'You must pass in a user_id, user_login, or user_email. ';
+			$pmpro_error .= 'You must pass in a user_id, user_login, or user_email.';
 		}
 		
 		//check the level

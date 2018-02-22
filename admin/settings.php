@@ -6,8 +6,8 @@ $pmproz_options = get_option('pmproz_options');
 function pmproz_settings_general() {
 
 	global $pmproz_options;
-
 	?>
+
 	<p>
 		<?php _e( 'Enter these when connecting to a Paid Memberships Pro account in Zapier.', 'pmpro-zapier' ); ?>
 	</p>
@@ -20,11 +20,13 @@ function pmproz_settings_general() {
 			</td>
 		</tr>
 	</table>
+
 	<?php
 
 }
 
-function pmproz_settings_triggers() {}
+function pmproz_settings_triggers() {
+}
 
 function pmproz_settings_field_api_key() {
 
@@ -96,21 +98,35 @@ function pmproz_settings_field_pmpro_after_change_membership_level_url() {
 	$value = !empty( $pmproz_options[ 'pmpro_after_change_membership_level_url' ] ) ? $pmproz_options[ 'pmpro_after_change_membership_level_url' ] : '';
 	?>
 	<input  type="text" name="pmproz_options[pmpro_after_change_membership_level_url]" size=60 value="<?php echo $value; ?>">
-
-<?php }
-
-?>
+<?php } ?>
 
 <div class="wrap">
+	<?php settings_errors(); ?>
 	<form action="options.php" method="POST">
-		<h1><?php _e('Paid Memberships Pro Zapier', 'pmproz'); ?></h1>
-		<h3><?php _e('Easily integrate Paid Memberships Pro and hundreds of other apps with Zapier.', 'pmproz'); ?></h3>
+		<h1><?php _e( 'Paid Memberships Pro Zapier', 'pmpro-zapier' ); ?></h1>
+		<h3><?php _e( 'Easily integrate Paid Memberships Pro and hundreds of other apps with Zapier.', 'pmpro-zapier' ); ?></h3>
 		<p>
 			<?php echo __( 'Paid Memberships Pro  Zapier enables 2-way communication between Paid Memberships Pro and hundreds of other services using Zapier.
 			For more information, visit ', 'pmpro-zapier' ) . '<a href="https://zapier.com" target="_blank" rel="noopener">Zapier.com</a>'; ?>
 		</p>
+		<?php
+		if( isset( $_REQUEST[ 'account_settings' ] ) ) {
+			$account = $_REQUEST[ 'account_settings' ];
+		} else {
+			$account = false;
+		}
+		?>
+		<h2 class="nav-tab-wrapper">
+			<a href="admin.php?page=pmpro-zapier" class="nav-tab<?php if( empty( $account ) ) { ?> nav-tab-active<?php } ?>"><?php _e( 'Trigger Settings', 'pmpro-zapier' ); ?></a>
+			<a href="admin.php?page=pmpro-zapier&account_settings=1" class="nav-tab<?php if( ! empty( $account ) ) { ?> nav-tab-active<?php } ?>"><?php _e( 'Account Settings', 'pmpro-zapier' ); ?></a>
+		</h2>
+
 		<?php do_settings_sections( 'pmproz_options' ); ?>
 		<?php settings_fields( 'pmproz_options' ); ?>
-		<?php submit_button(); ?>
+		<?php 
+		if( ! $account ) {	
+			submit_button(); 
+		}
+		 ?>
 	</form>
 </div>
