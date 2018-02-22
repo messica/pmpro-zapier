@@ -18,6 +18,37 @@ if ( ! defined( 'PMPROZ_PLUGIN_URL' ) ) {
 }
 $pmproz = new PMPro_Zapier();
 
+/* Register activation hook. */
+register_activation_hook( __FILE__, 'pmproz_admin_notice_activation_hook' );
+
+/**
+ * Runs only when the plugin is activated.
+ *
+ * @since 0.1.0
+ */
+function pmproz_admin_notice_activation_hook() {
+	// Create transient data.
+	set_transient( 'pmproz-admin-notice', true, 5 );
+}
+
+/**
+ * Admin Notice on Activation.
+ *
+ * @since 0.1.0
+ */
+function pmproz_admin_notice() {
+	// Check transient, if available display notice.
+	if ( get_transient( 'pmproz-admin-notice' ) ) { ?>
+		<div class="updated notice is-dismissible">
+			<p><?php printf( __( 'Thank you for activating. <a href="%s">Visit the settings page</a> to get started with the Zapier Add On.', 'pmpro-zapier' ), get_admin_url( null, 'admin.php?page=pmpro-zapier' ) ); ?></p>
+		</div>
+		<?php
+		// Delete transient, only display this notice once.
+		delete_transient( 'pmproz-admin-notice' );
+	}
+}
+add_action( 'admin_notices', 'pmproz_admin_notice' );
+
 /**
  * Function to add links to the plugin action links
  *
