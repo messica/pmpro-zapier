@@ -4,6 +4,9 @@ global $pmproz_options;
 $pmproz_options = get_option('pmproz_options');
 
 function pmproz_settings_general() {
+
+	global $pmproz_options;
+
 	?>
 	<p>
 		<?php _e( 'Enter these when connecting to a Paid Memberships Pro account in Zapier.', 'pmpro-zapier' ); ?>
@@ -12,7 +15,8 @@ function pmproz_settings_general() {
 		<tr>
 			<th scope="row"><?php _e( 'Webhook Handler', 'pmpro-zapier' ); ?></th>
 			<td>
-				<input type="text" readonly size=100 value="<?php echo PMPROZ_PLUGIN_URL . 'includes/webhook-handler.php'; ?>">
+				<input type="text" readonly size=100 value="<?php echo PMPROZ_PLUGIN_URL . 'includes/webhook-handler.php?api_key=' . $pmproz_options['api_key']; ?>"><br/>
+				<small><?php _e( 'Please copy this into your Zapier Webhook URL when passing data from Zapier to Paid Memberships Pro.', 'pmpro-zapier'); ?></small>
 			</td>
 		</tr>
 	</table>
