@@ -8,7 +8,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	require_once( '../../../../wp-load.php' );
 }
 
-global $pmproz_options, $pmpro_error;
+global $pmproz_options, $pmpro_error, $logstr;
+
+// Log string for debugging.
+$logstr = "";
 
 if ( empty( $pmproz_options ) ) {
 	$pmproz_options = get_option( 'pmproz_options' );
@@ -38,13 +41,19 @@ if ( defined( 'PMPRO_ZAPIER_DEBUG' ) ) {
 	wp_mail( $log_email, get_option( "blogname" ) . " Zapier Log", nl2br( $logstr ) );			
 }
 
+
+
+zapier_ipn_log( 'Data Received:' . var_export($_REQUEST, true) );
 switch ( $action ) {
 
 	case 'change_membership_level':
 
+		zapier_ipn_log( 'change membership level called successfully.' );
+
 		//need a user id, login, or email address and a membership level id
 		$user = pmproz_get_user_data();
 		$level_id = intval( pmpro_getParam( 'level_id' ) );
+		$user_id = $user->ID;
 		
 		//old level status
 		$old_level_status = pmpro_getParam('old_level_status', 'REQUEST', 'zapier_changed');
@@ -61,11 +70,13 @@ switch ( $action ) {
 			$pmpro_error .= 'You must pass in a new level_id or 0. ';
 		}
 		
-		if ( empty($pmpro_error) && pmpro_changeMembershipLevel( $level_id, $user_id, $old_level_status ) ) {
+		if ( empty($pmpro_error) && pmpro_changeMembershipLevel( $level_id, $user_id, 'zapier_changed' ) ) {
 			echo json_encode( array( 'status' => 'success' ) );
+			zapier_ipn_log( 'changed level' );
 		} else {
 
 			echo json_encode( array( 'status' => 'failed', 'message' => $pmpro_error ) );
+			zapier_ipn_log( $pmpro_error );
 		}
 
 		break;
@@ -155,24 +166,56 @@ switch ( $action ) {
 		break;
 }
 
+// write debug info to the text file.
+zapier_ipn_exit();
+
 /**
  * Helper function to retrieve the user object.
  * @return user (object)
  */
 function pmproz_get_user_data(){
 
-		$user_id = intval( pmpro_getParam( 'user_id' ) );
-		$user_login = sanitize_user( pmpro_getParam( 'user_login' ) );
-		$user_email = sanitize_email( pmpro_getParam('user_email' ) );
+	$user_id = intval( pmpro_getParam( 'user_id' ) );
+	$user_login = sanitize_user( pmpro_getParam( 'user_login' ) );
+	$user_email = sanitize_email( pmpro_getParam('user_email' ) );
 
-		if ( !empty($user_id) ) {
-			$user = get_userdata( $user_id );
-		} elseif ( !empty($user_login) ) {
-			$user = get_user_by( 'login', $user_login );
-		} elseif ( !empty($user_email) ) {
-			$user = get_user_by( 'email', $user_email );
-		}
+	if ( !empty($user_id) ) {
+		$user = get_userdata( $user_id );
+	} elseif ( !empty($user_login) ) {
+		$user = get_user_by( 'login', $user_login );
+	} elseif ( !empty($user_email) ) {
+		$user = get_user_by( 'email', $user_email );
+	}
 
-		return $user;
+	return $user;
+}
 
+/**
+ * Serves as a buffer for logging details to text file.
+ *
+ * @param string $s string to log to log file.
+ */
+function zapier_ipn_log( $s ) {
+    global $logstr;
+    $logstr .= "\t" . $s . "\n";
+}
+
+/**
+ * Output the log string to the text file and log what details are received.
+ * Ensure PMPRO_ZAPIER_DEBUG_LOG is set to true
+ */
+function zapier_ipn_exit() {
+    global $logstr;
+
+    if ( $logstr ) {
+        $logstr = "Logged On: " . date( "m/d/Y H:i:s" ) . "\n" . $logstr . "\n-------------\n";
+
+        if( PMPRO_ZAPIER_DEBUG_LOG ) {   
+            echo $logstr;
+            $loghandle = fopen(  PMPRO_ZAPIER_DIR . "/logs/zapier-logs.txt", "a+" );
+            fwrite( $loghandle, $logstr );
+            fclose( $loghandle );
+        }
+    }
+    exit;
 }

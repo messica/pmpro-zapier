@@ -2,20 +2,20 @@
 Contributors: strangerstudios
 Tags: paid memberships pro, pmpro, zapier
 Requires at least: 4
-Tested up to: 4.9.1
+Tested up to: 4.9.4
 Stable tag: .1
 
-Easily integrate Paid Memberships Pro and hundreds of other apps with Zapier.
+Integrate activity on your membership site with thousands of other apps via Zapier.
 
 == Description ==
 
-Easily integrate Paid Memberships Pro and hundreds of other apps with Zapier.
-
-The Paid Memberships Pro Zapier app includes the following triggers and actions to automate almost everything:
+Integrate activity on your membership site with thousands of other apps via Zapier (requires Paid Memberships Pro).
+ 
+Our Zapier integration includes the following triggers and actions to send information to Zapier and connect with third-party apps. A "Trigger" will send data to Zapier when changes are made on your Membership site. An "Action" will process incoming data when a change is sent to your Membership site via Zapier and a connected third-party app.
 
 = Triggers =
 * Changed Membership Level
-* Added Order
+* New Order
 * Updated Order
 
 = Actions =
@@ -42,8 +42,6 @@ Please post it in the issues section of GitHub and we'll fix it as soon as we ca
 = I need help installing, configuring, or customizing the plugin. =
 
 Please visit our premium support site at http://www.paidmembershipspro.com for more documentation and our support forums.
-
-== Screenshots ==
 
 == Changelog ==
 

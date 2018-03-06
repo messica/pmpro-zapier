@@ -5,7 +5,7 @@
  * Uses admin_menu hook
  */
 function pmproz_admin_menu() {
-	add_submenu_page( 'pmpro-membershiplevels', __( 'PMPro Zapier Settings', 'pmpro-zapier' ), __( 'PMPro Zapier', 'pmpro-zapier' ), 'manage_options', 'pmpro-zapier', 'pmproz_add_submenu_page' );
+	add_submenu_page( 'pmpro-membershiplevels', __( 'Zapier Settings - Paid Memberships Pro', 'pmpro-zapier' ), __( 'PMPro Zapier', 'pmpro-zapier' ), 'manage_options', 'pmpro-zapier', 'pmproz_add_submenu_page' );
 }
 add_action( 'admin_menu', 'pmproz_admin_menu' );
 
@@ -17,10 +17,9 @@ function pmproz_add_submenu_page() {
 }
 
 function pmproz_admin_init() {
-
 	// check to see if the account_settings tab is being displayed.
-	if( isset( $_REQUEST[ 'account_settings' ] ) ) {
-		$account = $_REQUEST[ 'account_settings' ];
+	if ( isset( $_REQUEST['account_settings'] ) ) {
+		$account = $_REQUEST['account_settings'];
 	} else {
 		$account = false;
 	}
