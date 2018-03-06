@@ -10,7 +10,9 @@ Text Domain: pmpro-zapier
 */
 
 // Includes.
+
 define( "PMPRO_ZAPIER_DIR", plugin_dir_path( __FILE__ ) );
+
 require_once( dirname( __FILE__ ) . '/includes/class-pmpro-zapier.php' );
 require_once( dirname( __FILE__ ) . '/admin/init.php' );
 
