@@ -71,9 +71,6 @@ class PMPro_Zapier {
 
 		$data['order'] = $order;
 
-		echo json_encode($data);
-		die();
-
 		$this->prepare_request( 'pmpro_updated_order' );
 		$this->post( $data );
 	}
