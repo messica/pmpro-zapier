@@ -126,39 +126,52 @@ switch ( $action ) {
 		break;
 
 	case 'update_order':
-		if ( is_numeric( pmpro_getParam( 'order' ) ) ) {
+		//figure out which kind of id was passed
+		if( !empty( $_REQUEST['order'] ) ) {
 			$order = new MemberOrder( pmpro_getParam( 'order' ) );
-		} else {
-			$order = new MemberOrder();
-			$order->getMemberOrderByCode( pmpro_getParam( 'order' ) );
+		} elseif(!empty($_REQUEST['order_id'])) {
+			$order = new MemberOrder( pmpro_getParam( 'order_id' ) );
+		} elseif(!empty($_REQUEST['code'])) {
+			$order = new MemberOrder( pmpro_getParam( 'code' ) );
+		} elseif(!empty($_REQUEST['id'])) {
+			$order = new MemberOrder( pmpro_getParam( 'id' ) );
 		}
 
-		$order->subtotal                    = pmpro_getParam( 'subtotal' );
-		$order->tax                         = pmpro_getParam( 'tax' ) ;
-		$order->couponamount                = pmpro_getParam( 'couponamount' );
-		$order->total                       = pmpro_getParam( 'total' );
-		$order->payment_type                = pmpro_getParam( 'payment_type' );
-		$order->cardtype                    = pmpro_getParam( 'cardtype' );
-		$order->accountnumber               = pmpro_getParam( 'accountnumber' );
-		$order->expirationmonth             = pmpro_getParam( 'expirationmonth' );
-		$order->expirationyear              = pmpro_getParam( 'expirationyear' );
-		$order->status                      = pmpro_getParam( 'status' );
-		$order->gateway                     = pmpro_getParam( 'gateway' );
-		$order->gateway_environment         = pmpro_getParam( 'gateway_environment' );
-		$order->payment_transaction_id      = pmpro_getParam( 'payment_transaction_id' );
-		$order->subscription_transaction_id = pmpro_getParam( 'subscription_transaction_id' );
-		$order->affiliate_id                = pmpro_getParam( 'affiliate_id' );
-		$order->affiliate_subid             = pmpro_getParam( 'affiliate_subid' );
-		$order->notes                       = pmpro_getParam( 'notes' );
-		$order->checkout_id                 = pmpro_getParam( 'checkout_id' );
-		$order->billing                     = new stdClass();
-		$order->billing->name               = pmpro_getParam( 'billing_name' );
-		$order->billing->street             = pmpro_getParam( 'billing_street' );
-		$order->billing->city               = pmpro_getParam( 'billing_city' );
-		$order->billing->state              = pmpro_getParam( 'billing_state' );
-		$order->billing->zip                = pmpro_getParam( 'billing_zip' );
-		$order->billing->country            = pmpro_getParam( 'billing_country' );
-		$order->billing->phone              = pmpro_getParam( 'billing_phone' );
+		if( empty( $order ) || empty( $order->id ) ) {
+			// assume this is a new order
+			$order = new MemberOrder;
+			$order->code = pmpro_getParam( 'code' );	// in case they pass in a specific code
+		}
+
+		// defaults to the existing order values if getParam is empty
+		$order->subtotal                    = pmpro_getParam( 'subtotal', 'REQUEST', $order->subtotal );
+		$order->tax                         = pmpro_getParam( 'tax', 'REQUEST', $order->tax ) ;
+		$order->couponamount                = pmpro_getParam( 'couponamount', 'REQUEST', $order->couponamount );
+		$order->total                       = pmpro_getParam( 'total', 'REQUEST', $order->total );
+		$order->payment_type                = pmpro_getParam( 'payment_type', 'REQUEST', $order->payment_type );
+		$order->cardtype                    = pmpro_getParam( 'cardtype', 'REQUEST', $order->cardtype );
+		$order->accountnumber               = pmpro_getParam( 'accountnumber', 'REQUEST', $order->accountnumber );
+		$order->expirationmonth             = pmpro_getParam( 'expirationmonth', 'REQUEST', $order->expirationmonth );
+		$order->expirationyear              = pmpro_getParam( 'expirationyear', 'REQUEST', $order->expirationyear );
+		$order->status                      = pmpro_getParam( 'status', 'REQUEST', $order->status );
+		$order->gateway                     = pmpro_getParam( 'gateway', 'REQUEST', $order->gateway );
+		$order->gateway_environment         = pmpro_getParam( 'gateway_environment', 'REQUEST', $order->gateway_environment );
+		$order->payment_transaction_id      = pmpro_getParam( 'payment_transaction_id', 'REQUEST', $order->payment_transaction_id );
+		$order->subscription_transaction_id = pmpro_getParam( 'subscription_transaction_id', 'REQUEST', $order->subscription_transaction_id );
+		$order->affiliate_id                = pmpro_getParam( 'affiliate_id', 'REQUEST', $order->affiliate_id );
+		$order->affiliate_subid             = pmpro_getParam( 'affiliate_subid', 'REQUEST', $order->affiliate_subid );
+		$order->notes                       = pmpro_getParam( 'notes', 'REQUEST', $order->notes );
+		$order->checkout_id                 = pmpro_getParam( 'checkout_id', 'REQUEST', $order->checkout_id );
+		if( empty($order->billing ) ) {
+			$order->billing                     = new stdClass();
+		}
+		$order->billing->name               = pmpro_getParam( 'billing_name', 'REQUEST', $order->billing->name );
+		$order->billing->street             = pmpro_getParam( 'billing_street', 'REQUEST', $order->billing->street );
+		$order->billing->city               = pmpro_getParam( 'billing_city', 'REQUEST', $order->billing->city);
+		$order->billing->state              = pmpro_getParam( 'billing_state', 'REQUEST', $order->billing->state);
+		$order->billing->zip                = pmpro_getParam( 'billing_zip', 'REQUEST', $order->billing->zip);
+		$order->billing->country            = pmpro_getParam( 'billing_country', 'REQUEST', $order->billing->country );
+		$order->billing->phone              = pmpro_getParam( 'billing_phone', 'REQUEST', $order->billing->phone );
 
 		if ( $order->saveOrder() ) {
 			echo json_encode( array( 'status' => 'success' ) );
