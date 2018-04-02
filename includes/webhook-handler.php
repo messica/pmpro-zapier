@@ -89,34 +89,33 @@ switch ( $action ) {
 		$order->user_id       = $user->ID;
 		$order->membership_id = intval( pmpro_getParam( 'level_id' ) );
 
-		//defaults
 		$order->code                        = $order->getRandomCode();
-		$order->subtotal                    = ! empty( pmpro_getParam( 'subtotal' ) ) ? pmpro_getParam( 'subtotal' ) : '';
-		$order->tax                         = ! empty( pmpro_getParam( 'tax' ) ) ? pmpro_getParam( 'tax' ) : '';
-		$order->couponamount                = ! empty( pmpro_getParam( 'couponamount' ) ) ? pmpro_getParam( 'couponamount' ) : '';
-		$order->total                       = ! empty( pmpro_getParam( 'total' ) ) ? pmpro_getParam( 'total' ) : '';
-		$order->payment_type                = ! empty( pmpro_getParam( 'payment_type' ) ) ? pmpro_getParam( 'payment_type' ) : '';
-		$order->cardtype                    = ! empty( pmpro_getParam( 'cardtype' ) ) ? pmpro_getParam( 'cardtype' ) : '';
-		$order->accountnumber               = ! empty( pmpro_getParam( 'accountnumber' ) ) ? pmpro_getParam( 'accountnumber' ) : '';
-		$order->expirationmonth             = ! empty( pmpro_getParam( 'expirationmonth' ) ) ? pmpro_getParam( 'expirationmonth' ) : '';
-		$order->expirationyear              = ! empty( pmpro_getParam( 'expirationyear' ) ) ? pmpro_getParam( 'expirationyear' ) : '';
-		$order->status                      = ! empty( pmpro_getParam( 'status' ) ) ? pmpro_getParam( 'tax' ) : 'success';
-		$order->gateway                     = ! empty( pmpro_getParam( 'gateway' ) ) ? pmpro_getParam( 'gateway' ) : pmpro_getOption( 'gateway' );
-		$order->gateway_environment         = ! empty( pmpro_getParam( 'gateway_environment' ) ) ? pmpro_getParam( 'gateway_environment' ) : pmpro_getOption( 'gateway_environment' );
-		$order->payment_transaction_id      = ! empty( pmpro_getParam( 'payment_transaction_id' ) ) ? pmpro_getParam( 'payment_transaction_id' ) : '';
-		$order->subscription_transaction_id = ! empty( pmpro_getParam( 'subscription_transaction_id' ) ) ? pmpro_getParam( 'subscription_transaction_id' ) : '';
-		$order->affiliate_id                = ! empty( pmpro_getParam( 'affiliate_id' ) ) ? pmpro_getParam( 'affiliate_id' ) : '';
-		$order->affiliate_subid             = ! empty( pmpro_getParam( 'affiliate_subid' ) ) ? pmpro_getParam( 'affiliate_subid' ) : '';
-		$order->notes                       = ! empty( pmpro_getParam( 'notes' ) ) ? pmpro_getParam( 'notes' ) : '';
-		$order->checkout_id                 = ! empty( pmpro_getParam( 'checkout_id' ) ) ? pmpro_getParam( 'checkout_id' ) : 0;
+		$order->subtotal                    = pmpro_getParam( 'subtotal' );
+		$order->tax                         = pmpro_getParam( 'tax' ) ;
+		$order->couponamount                = pmpro_getParam( 'couponamount' );
+		$order->total                       = pmpro_getParam( 'total' );
+		$order->payment_type                = pmpro_getParam( 'payment_type' );
+		$order->cardtype                    = pmpro_getParam( 'cardtype' );
+		$order->accountnumber               = pmpro_getParam( 'accountnumber' );
+		$order->expirationmonth             = pmpro_getParam( 'expirationmonth' );
+		$order->expirationyear              = pmpro_getParam( 'expirationyear' );
+		$order->status                      = pmpro_getParam( 'status' );
+		$order->gateway                     = pmpro_getParam( 'gateway' );
+		$order->gateway_environment         = pmpro_getParam( 'gateway_environment' );
+		$order->payment_transaction_id      = pmpro_getParam( 'payment_transaction_id' );
+		$order->subscription_transaction_id = pmpro_getParam( 'subscription_transaction_id' );
+		$order->affiliate_id                = pmpro_getParam( 'affiliate_id' );
+		$order->affiliate_subid             = pmpro_getParam( 'affiliate_subid' );
+		$order->notes                       = pmpro_getParam( 'notes' );
+		$order->checkout_id                 = pmpro_getParam( 'checkout_id' );
 		$order->billing                     = new stdClass();
-		$order->billing->name               = ! empty( pmpro_getParam( 'billing_name' ) ) ? pmpro_getParam( 'billing_name' ) : '';
-		$order->billing->street             = ! empty( pmpro_getParam( 'billing_street' ) ) ? pmpro_getParam( 'billing_street' ) : '';
-		$order->billing->city               = ! empty( pmpro_getParam( 'billing_city' ) ) ? pmpro_getParam( 'billing_city' ) : '';
-		$order->billing->state              = ! empty( pmpro_getParam( 'billing_state' ) ) ? pmpro_getParam( 'billing_state' ) : '';
-		$order->billing->zip                = ! empty( pmpro_getParam( 'billing_zip' ) ) ? pmpro_getParam( 'billing_zip' ) : '';
-		$order->billing->country            = ! empty( pmpro_getParam( 'billing_country' ) ) ? pmpro_getParam( 'billing_country' ) : '';
-		$order->billing->phone              = ! empty( pmpro_getParam( 'billing_phone' ) ) ? pmpro_getParam( 'billing_phone' ) : '';
+		$order->billing->name               = pmpro_getParam( 'billing_name' );
+		$order->billing->street             = pmpro_getParam( 'billing_street' );
+		$order->billing->city               = pmpro_getParam( 'billing_city' );
+		$order->billing->state              = pmpro_getParam( 'billing_state' );
+		$order->billing->zip                = pmpro_getParam( 'billing_zip' );
+		$order->billing->country            = pmpro_getParam( 'billing_country' );
+		$order->billing->phone              = pmpro_getParam( 'billing_phone' );
 
 		if ( $order->saveOrder() ) {
 			echo json_encode( array( 'status' => 'success' ) );
@@ -134,8 +133,6 @@ switch ( $action ) {
 			$order->getMemberOrderByCode( pmpro_getParam( 'order' ) );
 		}
 
-			//defaults
-		$order->code                        = $order->getRandomCode();
 		$order->subtotal                    = pmpro_getParam( 'subtotal' );
 		$order->tax                         = pmpro_getParam( 'tax' ) ;
 		$order->couponamount                = pmpro_getParam( 'couponamount' );
