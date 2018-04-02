@@ -46,6 +46,74 @@ if ( defined( 'PMPRO_ZAPIER_DEBUG' ) ) {
 zapier_ipn_log( 'Data Received:' . var_export($_REQUEST, true) );
 switch ( $action ) {
 
+	case 'add_member':
+
+		zapier_ipn_log( 'add member called successfully.' );
+
+		// check for existing user
+		$user = pmproz_get_user_data();
+		
+		$level_id = pmpro_getParam( 'level_id' );
+		$pmpro_error = '';
+		
+		// only update user data if this is a new user
+		if( empty( $user) ) {
+			$user_email = pmpro_getParam( 'user_email' );
+			$user_login = pmpro_getParam( 'user_login' );
+			$full_name = pmpro_getParam( 'full_name' );
+			$first_name = pmpro_getParam( 'first_name' );
+			$last_name = pmpro_getParam( 'last_name' );	
+
+			// we need an email address at least
+			if( empty( $user_email ) ) {
+				$pmpro_error = __( 'You must pass the user_email parameter to the add_member method.', 'pmpro-zapier' );
+			} else {
+				// if a full name is passed, maybe use it to get first and last name
+				if( !empty( $full_name) && empty( $first_name ) && empty( $last_name ) ) {
+					$name_parts = pnp_split_full_name( $full_name );
+					$first_name = $name_parts['fname'];
+					$last_name = $name_parts['lname'];
+				}
+
+				// if no user name is passed, make one
+				if( empty( $user_login ) ) {
+					$user_login = pmpro_generateUsername( $first_name, $last_name, $user_email );
+				}
+
+				// generate a password
+				if ( empty( $user_pass ) ) {
+					$user_pass  = pmpro_getDiscountCode() . pmpro_getDiscountCode();
+				}
+
+				//insert user
+				$new_user_array = array(
+						"user_login" => $user_login,
+						"user_pass"  => $user_pass,
+						"user_email" => $user_email,
+						"first_name" => $first_name,
+						"last_name"  => $last_name
+					);
+				$user_id = apply_filters( 'pmpro_new_user', '', $new_user_array );
+				if ( empty( $user_id ) ) {
+					$user_id = wp_insert_user( $new_user_array );
+				}
+			}	
+		} else {
+			$user_id = $user->ID;
+		}
+
+		// add membership level
+		if ( empty($pmpro_error) && pmpro_changeMembershipLevel( $level_id, $user_id, 'zapier_changed' ) ) {
+			echo json_encode( array( 'status' => 'success' ) );
+			zapier_ipn_log( 'changed level' );
+		} else {
+
+			echo json_encode( array( 'status' => 'failed', 'message' => $pmpro_error ) );
+			zapier_ipn_log( $pmpro_error );
+		}
+
+		break;
+
 	case 'change_membership_level':
 
 		zapier_ipn_log( 'change membership level called successfully.' );
