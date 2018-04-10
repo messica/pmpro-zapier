@@ -27,8 +27,8 @@ function pmproz_add_submenu_page() {
 			}
 			?>
 			<h2 class="nav-tab-wrapper">
-				<a href="admin.php?page=pmpro-zapier" class="nav-tab<?php if ( empty( $account ) ) { ?> nav-tab-active<?php } ?>"><?php esc_attr_e( 'Trigger Settings', 'pmpro-zapier' ); ?></a>
-				<a href="admin.php?page=pmpro-zapier&account_settings=1" class="nav-tab<?php if ( ! empty( $account ) ) { ?> nav-tab-active<?php } ?>"><?php esc_attr_e( 'Account Settings', 'pmpro-zapier' ); ?></a>
+				<a href="admin.php?page=pmpro-zapier" class="nav-tab<?php if ( empty( $account ) ) { ?> nav-tab-active<?php } ?>"><?php esc_attr_e( 'Send Data to Zapier', 'pmpro-zapier' ); ?></a>
+				<a href="admin.php?page=pmpro-zapier&account_settings=1" class="nav-tab<?php if ( ! empty( $account ) ) { ?> nav-tab-active<?php } ?>"><?php esc_attr_e( 'Receive Data From Zapier', 'pmpro-zapier' ); ?></a>
 			</h2>
 			<?php do_settings_sections( 'pmproz_options' ); ?>
 			<?php settings_fields( 'pmproz_options' ); ?>
