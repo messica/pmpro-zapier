@@ -49,7 +49,12 @@ class PMPro_Zapier {
 	 * Send data to Zapier when an new order is added
 	 */
 	static function pmpro_added_order( $order ) {
-
+		// bail if setting is not checked
+		$options = PMPro_Zapier::get_options();
+		if( empty( $options['pmpro_added_order'] ) ) {
+			return;
+		}
+	
 		// Get the saved order.
 		$order = new MemberOrder($order->id);
 
@@ -78,7 +83,12 @@ class PMPro_Zapier {
 	 * Send data to Zapier when an order is updated
 	 */
 	static function pmpro_updated_order( $order ) {
-
+		// bail if setting is not checked
+		$options = PMPro_Zapier::get_options();
+		if( empty( $options['pmpro_updated_order'] ) ) {
+			return;
+		}
+	
 		// Get the updated order.
 		$order = new MemberOrder($order->id);
 
@@ -107,6 +117,12 @@ class PMPro_Zapier {
 	 * Send data to Zapier after a user's membership level changes
 	 */
 	static function pmpro_after_change_membership_level( $level_id, $user_id, $cancel_level ) {
+		// bail if setting is not checked
+		$options = PMPro_Zapier::get_options();
+		if( empty( $options['pmpro_after_change_membership_level'] ) ) {
+			return;
+		}
+		
 		global $wpdb;
 
 		// Get user and level object.
@@ -148,17 +164,18 @@ class PMPro_Zapier {
 
 		$zap = new PMPro_Zapier();
 		$zap->prepare_request( 'pmpro_after_change_membership_level' );
-		$zap->post( $data );
+		$zap->post( $data );		
 	}
 
 	/**
 	 * Figure out which webhook url to use.
 	 */
 	function prepare_request( $hook ) {
-		if ( empty( $this->options[ $hook ] ) && $hook != 'test' ) {
+		$options = PMPro_Zapier::get_options();
+		if ( empty( $options[ $hook ] ) && $hook != 'test' ) {
 			return false;
 		}
-		$this->webhook_url = $this->options[ $hook . '_url' ];
+		$this->webhook_url = $options[ $hook . '_url' ];
 	}
 
 	/**
