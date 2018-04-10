@@ -2,30 +2,53 @@
 
 class PMPro_Zapier {
 
-	public $options;
 	public $webhook_url;
 
 	function __construct() {
-		add_action( 'init', array( $this, 'init' ) );
 	}
 
-	function init() {
+	/**
+	 * Run some setup on init
+	 */
+	static function init() {
 		// Set up PMPro hooks.
-		add_action( 'pmpro_added_order', array( $this, 'pmpro_added_order' ) );
-		add_action( 'pmpro_updated_order', array( $this, 'pmpro_updated_order' ) );
+		add_action( 'pmpro_added_order', array( __CLASS__, 'pmpro_added_order' ) );
+		add_action( 'pmpro_updated_order', array( __CLASS__, 'pmpro_updated_order' ) );
 		add_action( 'pmpro_after_change_membership_level', array(
-			$this,
+			__CLASS__,
 			'pmpro_after_change_membership_level'
 		), 10, 3 );
 
 		// Load text domain.
-		load_plugin_textdomain( 'pmpro-zapier' );
-
-		// Get PMPro Zapier settings.
-		$this->options = get_option( 'pmproz_options' );
+		load_plugin_textdomain( 'pmpro-zapier' );	
 	}
 
-	function pmpro_added_order( $order ) {
+	/**
+	 * Helper function to get options from WP DB
+	 */
+	static function get_options() {
+		$options = get_option( 'pmproz_options' );		
+		
+		// generate an API key if we don't have one yet
+		if ( empty( $options['api_key'] ) ) {
+			$options['api_key'] = wp_generate_password( 32, false );
+			PMPro_Zapier::update_options( $options );
+		}
+		
+		return $options;
+	}
+	
+	/**
+	 * Helper function to save options in WP DB
+	 */
+	static function update_options( $options ) {
+		return update_option( 'pmproz_options', $options, 'no' );
+	}	
+	
+	/**
+	 * Send data to Zapier when an new order is added
+	 */
+	static function pmpro_added_order( $order ) {
 
 		// Get the saved order.
 		$order = new MemberOrder($order->id);
@@ -46,11 +69,15 @@ class PMPro_Zapier {
 
 		$data['order'] = $order;
 
-		$this->prepare_request( 'pmpro_added_order' );
-		$this->post( $data );
+		$zap = new PMPro_Zapier();
+		$zap->prepare_request( 'pmpro_added_order' );
+		$zap->post( $data );
 	}
 
-	function pmpro_updated_order( $order ) {
+	/**
+	 * Send data to Zapier when an order is updated
+	 */
+	static function pmpro_updated_order( $order ) {
 
 		// Get the updated order.
 		$order = new MemberOrder($order->id);
@@ -71,11 +98,15 @@ class PMPro_Zapier {
 
 		$data['order'] = $order;
 
-		$this->prepare_request( 'pmpro_updated_order' );
-		$this->post( $data );
+		$zap = new PMPro_Zapier();
+		$zap->prepare_request( 'pmpro_updated_order' );
+		$zap->post( $data );
 	}
 
-	function pmpro_after_change_membership_level( $level_id, $user_id, $cancel_level ) {
+	/**
+	 * Send data to Zapier after a user's membership level changes
+	 */
+	static function pmpro_after_change_membership_level( $level_id, $user_id, $cancel_level ) {
 		global $wpdb;
 
 		// Get user and level object.
@@ -115,10 +146,14 @@ class PMPro_Zapier {
 
 		$data['level'] = $level;
 
-		$this->prepare_request( 'pmpro_after_change_membership_level' );
-		$this->post( $data );
+		$zap = new PMPro_Zapier();
+		$zap->prepare_request( 'pmpro_after_change_membership_level' );
+		$zap->post( $data );
 	}
 
+	/**
+	 * Figure out which webhook url to use.
+	 */
 	function prepare_request( $hook ) {
 		if ( empty( $this->options[ $hook ] ) && $hook != 'test' ) {
 			return false;
@@ -126,6 +161,9 @@ class PMPro_Zapier {
 		$this->webhook_url = $this->options[ $hook . '_url' ];
 	}
 
+	/**
+	 * Post data to Zapier
+	 */
 	function post( $data = array() ) {
 		$args['headers'] = array(
 			'Content-Type:' => 'application/json'

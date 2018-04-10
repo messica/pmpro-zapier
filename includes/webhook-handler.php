@@ -8,15 +8,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	require_once( '../../../../wp-load.php' );
 }
 
-global $pmproz_options, $pmpro_error, $logstr;
+global $pmpro_error, $logstr;
 
 // Log string for debugging.
 $logstr = "";
 
-if ( empty( $pmproz_options ) ) {
-	$pmproz_options = get_option( 'pmproz_options' );
-}
-
+$pmproz_options = PMPro_Zapier::get_options();
 $api_key = ! empty( $_REQUEST['api_key'] ) ? sanitize_key( $_REQUEST['api_key'] ) : '';
 $action  = ! empty( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : '';
 
