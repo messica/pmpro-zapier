@@ -38,8 +38,6 @@ if ( defined( 'PMPRO_ZAPIER_DEBUG' ) ) {
 	wp_mail( $log_email, get_option( "blogname" ) . " Zapier Log", nl2br( $logstr ) );			
 }
 
-
-
 zapier_ipn_log( 'Data Received:' . var_export($_REQUEST, true) );
 switch ( $action ) {
 
@@ -98,6 +96,18 @@ switch ( $action ) {
 		} else {
 			$user_id = $user->ID;
 		}
+		
+		// make sure we have a user and he or she doesn't have a membership level already
+		if( empty( $user_id ) ){
+			$pmpro_error .= __( 'User creation failed.', 'pmpro-zapier' );
+		} elseif( pmpro_hasMembershipLevel( NULL, $user_id ) ) {
+			$pmpro_error .= __( 'This user already has a membership level.', 'pmpro-zapier' );
+		}
+					
+		//check the level
+		if( empty( $level_id ) && $level_id !== '0' ) {
+			$pmpro_error .= __( 'You must pass in valid level_id.', 'pmpro-zapier' );
+		}
 
 		// add membership level
 		if ( empty($pmpro_error) && pmpro_changeMembershipLevel( $level_id, $user_id, 'zapier_changed' ) ) {
@@ -127,12 +137,12 @@ switch ( $action ) {
 
 		// failed to get the user object.
 		if( empty( $user ) ){
-			$pmpro_error .= 'You must pass in a user_id, user_login, or user_email.';
+			$pmpro_error .= __('You must pass in a user_id, user_login, or user_email.', 'pmpro-zapier' );
 		}
 		
 		//check the level
 		if( empty( $level_id ) && $level_id !== '0' ) {
-			$pmpro_error .= 'You must pass in a new level_id or 0. ';
+			$pmpro_error .= __( 'You must pass in a new level_id or 0.', 'pmpro-zapier' );
 		}
 		
 		if ( empty($pmpro_error) && pmpro_changeMembershipLevel( $level_id, $user_id, 'zapier_changed' ) ) {
@@ -272,6 +282,7 @@ zapier_ipn_exit();
  */
 function pmproz_get_user_data(){
 
+	$user = false;
 	$user_id = intval( pmpro_getParam( 'user_id' ) );
 	$user_login = sanitize_user( pmpro_getParam( 'user_login' ) );
 	$user_email = sanitize_email( pmpro_getParam('user_email' ) );
