@@ -8,7 +8,7 @@ add_action( 'init', array( 'PMPro_Zapier', 'init' ) );
 /**
  * Register activation hook. 
  */
-register_activation_hook( __FILE__, 'pmproz_admin_notice_activation_hook' );
+register_activation_hook( PMPRO_ZAPIER_BASENAME, 'pmproz_admin_notice_activation_hook' );
 
 /**
  * Runs only when the plugin is activated.
@@ -49,9 +49,9 @@ function pmproz_plugin_action_links( $links ) {
 			'<a href="' . get_admin_url( null, 'admin.php?page=pmpro-zapier' ) . '">' . __( 'Settings', 'pmpro-zapier' ) . '</a>',
 		);
 	}
-	return array_merge( $new_links, $links );
+	return array_merge( $links, $new_links );
 }
-add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'pmproz_plugin_action_links' );
+add_filter( 'plugin_action_links_' . PMPRO_ZAPIER_BASENAME, 'pmproz_plugin_action_links' );
 
 /**
  * Function to add links to the plugin row meta
@@ -63,7 +63,7 @@ function pmproz_plugin_row_meta( $links, $file ) {
 	if ( strpos( $file, 'pmpro-zapier.php' ) !== false ) {
 		$new_links = array(
 			'<a href="' . esc_url( 'https://www.paidmembershipspro.com/add-ons/pmpro-zapier/' ) . '" title="' . esc_attr( __( 'View Documentation', 'pmpro' ) ) . '">' . __( 'Docs', 'pmpro-zapier' ) . '</a>',
-			'<a href="' . esc_url( 'http://paidmembershipspro.com/support/' ) . '" title="' . esc_attr( __( 'Visit Customer Support Forum', 'pmpro' ) ) . '">' . __( 'Support', 'pmpro-zapier' ) . '</a>',
+			'<a href="' . esc_url( 'https://www.paidmembershipspro.com/support/' ) . '" title="' . esc_attr( __( 'Visit Customer Support Forum', 'pmpro' ) ) . '">' . __( 'Support', 'pmpro-zapier' ) . '</a>',
 		);
 		$links = array_merge( $links, $new_links );
 	}

@@ -1,28 +1,135 @@
 === Paid Memberships Pro - Zapier Add On ===
 Contributors: strangerstudios
 Tags: paid memberships pro, pmpro, zapier
-Requires at least: 4
-Tested up to: 4.9.4
+Requires at least: 4.9
+Tested up to: 4.9.5
 Stable tag: .1
 
 Integrate activity on your membership site with thousands of other apps via Zapier.
 
 == Description ==
 
-Integrate activity on your membership site with thousands of other apps via Zapier (requires Paid Memberships Pro).
+Integrate activity on your membership site with thousands of other apps via Zapier (requires Paid Memberships Pro). [Extended documentation can be found at PaidMembershipsPro.com](https://www.paidmembershipspro.com/add-ons/pmpro-zapier/).
  
 Our Zapier integration includes the following triggers and actions to send information to Zapier and connect with third-party apps. A "Trigger" will send data to Zapier when changes are made on your Membership site. An "Action" will process incoming data when a change is sent to your Membership site via Zapier and a connected third-party app.
 
 = Triggers =
-* Changed Membership Level
-* New Order
-* Updated Order
+
+*New Order*
+
+*Updated Order*
+
+*Changed Membership Level*
+
 
 = Actions =
-* Change Membership Level
-* Check Memebrship Level
-* Add Order
-* Update Order
+
+When creating the Action component of a Zap, use the webhook URL provided on the Actions tab of the PMPro Zapier settings and pass in parameters matching those given below.
+
+*add_member*
+
+The following parameters can be passed into the add_member Action:
+
+* user_email (required)
+* level_id (required)
+* user_login
+* full_name
+* first_name
+* last_name
+
+Note that user_email and level_id are required parameters; you must also pass in at least one of user_login, full_name, first_name, or last_name.
+
+*change_membership_level*
+
+The following parameters can be passed into the change_membership_level Action:
+
+* user_id
+* user_email
+* user_login
+* level_id (required)
+
+Note that level_id is a required parameter; you must also pass in at least one of the following user identifiers is also required: user_id, user_email, or user_login.
+
+*add_order*
+
+The following parameters can be passed into the add_order Action:
+
+* user_id
+* user_email
+* user_login
+* level_id
+* subtotal
+* tax
+* couponamount
+* total
+* payment_type
+* cardtype
+* accountnumber
+* expirationmonth
+* expirationyear
+* status
+* gateway
+* gateway_environment
+* payment_transaction_id
+* subscription_transaction_id
+* affiliate_id
+* affiliate_subid
+* notes
+* checkout_id
+* billing_name
+* billing_street
+* billing_city
+* billint_state
+* billing_zip
+* billing_country
+* billing_phone
+
+
+*update_order*
+
+The following parameters can be passed into the update_order Action:
+
+* order, order_id, code, or id (required)
+* user_id
+* user_email
+* user_login
+* level_id
+* subtotal
+* tax
+* couponamount
+* total
+* payment_type
+* cardtype
+* accountnumber
+* expirationmonth
+* expirationyear
+* status
+* gateway
+* gateway_environment
+* payment_transaction_id
+* subscription_transaction_id
+* affiliate_id
+* affiliate_subid
+* notes
+* checkout_id
+* billing_name
+* billing_street
+* billing_city
+* billint_state
+* billing_zip
+* billing_country
+* billing_phone
+
+*has_membership_level*
+
+The following parameters can be passed into the has_membership_level Action:
+
+* user_id
+* user_email
+* user_login
+* level_id (required)
+
+Note that level_id is a required parameter; you must also pass in at least one of the following user identifiers is also required: user_id, user_email, or user_login.
 
 == Installation ==
 = Prerequisites =
