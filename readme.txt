@@ -21,7 +21,6 @@ Our Zapier integration includes the following triggers and actions to send infor
 
 *Changed Membership Level*
 
-
 = Actions =
 
 When creating the Action component of a Zap, use the webhook URL provided on the Actions tab of the PMPro Zapier settings and pass in parameters matching those given below.
