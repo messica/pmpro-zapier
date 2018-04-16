@@ -78,7 +78,7 @@ The following parameters can be passed into the add_order Action:
 * billing_name
 * billing_street
 * billing_city
-* billint_state
+* billing_state
 * billing_zip
 * billing_country
 * billing_phone
@@ -114,7 +114,7 @@ The following parameters can be passed into the update_order Action:
 * billing_name
 * billing_street
 * billing_city
-* billint_state
+* billing_state
 * billing_zip
 * billing_country
 * billing_phone
