@@ -25,24 +25,11 @@ if ( $api_key != $pmproz_options['api_key'] ) {
 	exit;
 }
 
-// for debugging
-if ( defined( 'PMPRO_ZAPIER_DEBUG' ) ) {
-	$logstr = var_export( $_REQUEST, true );
-
-	if ( strpos( PMPRO_ZAPIER_DEBUG, '@' ) ) {
-		$log_email = PMPRO_ZAPIER_DEBUG;
-	} else {
-		$log_email = get_option( 'admin_email' );
-	}
-
-	wp_mail( $log_email, get_option( 'blogname' ) . ' Zapier Log', nl2br( $logstr ) );
-}
-
-zapier_ipn_log( 'Data Received:' . var_export( $_REQUEST, true ) );
+zapier_webhook_log( __( 'Data Received', 'pmpro-zapier' ) . ': ' . var_export( $_REQUEST, true ) );
 switch ( $action ) {
 
 	case 'add_member':
-		zapier_ipn_log( 'add member called successfully.' );
+		zapier_webhook_log( __( 'add member called successfully', 'pmpro-zapier' ) );
 
 		// check for existing user
 		$user = pmproz_get_user_data();
@@ -111,7 +98,7 @@ switch ( $action ) {
 		// add membership level
 		if ( empty( $pmpro_error ) && pmpro_changeMembershipLevel( $level_id, $user_id, 'zapier_changed' ) ) {
 			echo json_encode( array( 'status' => 'success' ) );
-			zapier_ipn_log( 'changed level' );
+			zapier_webhook_log( __( 'changed level' , 'pmpro-zapier' ) );
 		} else {
 
 			echo json_encode(
@@ -120,13 +107,13 @@ switch ( $action ) {
 					'message' => $pmpro_error,
 				)
 			);
-			zapier_ipn_log( $pmpro_error );
+			zapier_webhook_log( $pmpro_error );
 		}
 
 		break;
 
 	case 'change_membership_level':
-		zapier_ipn_log( 'change membership level called successfully.' );
+		zapier_webhook_log( 'change membership level called successfully.' );
 
 		// need a user id, login, or email address and a membership level id
 		$user     = pmproz_get_user_data();
@@ -150,7 +137,7 @@ switch ( $action ) {
 
 		if ( empty( $pmpro_error ) && pmpro_changeMembershipLevel( $level_id, $user_id, 'zapier_changed' ) ) {
 			echo json_encode( array( 'status' => 'success' ) );
-			zapier_ipn_log( 'changed level' );
+			zapier_webhook_log( __( 'changed level', 'pmpro-zapier' ) );
 		} else {
 
 			echo json_encode(
@@ -159,7 +146,7 @@ switch ( $action ) {
 					'message' => $pmpro_error,
 				)
 			);
-			zapier_ipn_log( $pmpro_error );
+			zapier_webhook_log( $pmpro_error );
 		}
 
 		break;
@@ -320,7 +307,7 @@ function pmproz_get_user_data() {
  *
  * @param string $s string to log to log file.
  */
-function zapier_ipn_log( $s ) {
+function zapier_webhook_log( $s ) {
 	global $logstr;
 	$logstr .= "\t" . $s . "\n";
 }
@@ -333,14 +320,29 @@ function zapier_ipn_exit() {
 	global $logstr;
 
 	if ( $logstr ) {
-		$logstr = 'Logged On: ' . date( 'm/d/Y H:i:s' ) . "\n" . $logstr . "\n-------------\n";
+		$logstr = __('Logged On', 'pmpro-zapier' ) . ': ' . date( 'm/d/Y H:i:s' ) . "\n" . $logstr . "\n-------------\n";
 
-		if ( defined( 'PMPRO_ZAPIER_DEBUG_LOG' ) && true === PMPRO_ZAPIER_DEBUG_LOG ) {
-			echo $logstr;
+		// save to log
+		if ( defined( 'PMPRO_ZAPIER_DEBUG_LOG' ) && true === PMPRO_ZAPIER_DEBUG_LOG ) {			
 			$loghandle = fopen( PMPRO_ZAPIER_DIR . '/logs/zapier-logs.txt', 'a+' );
 			fwrite( $loghandle, $logstr );
 			fclose( $loghandle );
 		}
+		
+		if( defined( 'PMPRO_ZAPIER_DEBUG' ) && PMPRO_ZAPIER_DEBUG !== false ) {
+			// output to screen
+			if ( current_user_can( 'manage_options' ) ) {
+				echo $logstr;
+			}
+			
+			// send email
+			if ( strpos( PMPRO_ZAPIER_DEBUG, '@' ) ) {
+				$log_email = PMPRO_ZAPIER_DEBUG;
+			} else {
+				$log_email = get_option( 'admin_email' );
+			}			
+			wp_mail( $log_email, get_option( 'blogname' ) . ' ' . __( 'Zapier Log', 'pmpro-zapier' ), nl2br( $logstr ) );
+		}					
 	}
 	exit;
 }
