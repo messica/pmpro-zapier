@@ -75,6 +75,8 @@ function pmproz_admin_init() {
 		add_settings_section( 'pmproz_settings_general', __( 'Account Settings', 'pmpro-zapier' ), 'pmproz_settings_general', 'pmproz_options' );
 		// Add general fields.
 		add_settings_field( 'pmproz_settings_field_api_key', __( 'API Key', 'pmpro-zapier' ), 'pmproz_settings_field_api_key', 'pmproz_options', 'pmproz_settings_general' );
+
+		add_settings_section( 'pmproz_list_of_available_actions', __( 'Available Actions', 'pmpro-zapier' ), 'pmproz_list_of_available_actions', 'pmproz_options' );
 	}
 }
 add_action( 'admin_init', 'pmproz_admin_init' );
@@ -109,6 +111,59 @@ function pmproz_settings_general() {
 			<td>
 				<input type="text" readonly size="80" value="<?php echo esc_attr( PMPRO_ZAPIER_PLUGIN_URL ) . 'includes/webhook-handler.php?api_key=' . esc_attr( $pmproz_options['api_key'] ); ?>"><br/>
 				<small><?php esc_attr_e( 'This is the Webhook URL used when passing data from Zapier to Paid Memberships Pro.', 'pmpro-zapier' ); ?></small>
+			</td>
+		</tr>
+	</table>
+	<?php
+}
+
+function pmproz_list_of_available_actions(){
+	?>
+	<p><?php esc_attr_e( 'This is a list of available actions when sending data from Zapier to Paid Memberships Pro', 'pmpro-zapier' ); ?></p>
+	<table class="form-table">
+		<!-- add_member -->
+		<tr>
+			<th scope="row"><?php esc_attr_e( 'add_member', 'pmpro-zapier' ); ?></th>
+			<td>
+				<p><strong><?php _e( 'Accepted Data: first_name, last_name, full_name, user_login, user_email, level_id.', 'pmpro-zapier' ); ?></strong></p>
+				<p><?php _e( 'Creates a new user if an account does not exist and assigns a membership level.', 'pmpro-zapier' ); ?></p>
+				<p><?php _e( 'If the user exists and is a non-member, assign a membership level to their account.', 'pmpro-zapier' ); ?></p>
+				<p><?php _e( 'If the user exists and currently has a membership level, no changes will be made to the user.', 'pmpro-zapier' ); ?></p>
+			</td>
+		</tr>
+		<!-- change_membership_level -->
+		<tr>
+			<th scope="row"><?php esc_attr_e( 'change_membership_level', 'pmpro-zapier' ); ?></th>
+			<td>
+				<p><strong><?php _e( 'Accepted Data: user_email, level_id.', 'pmpro-zapier' ); ?></strong></p>
+				<p><?php _e( "This requires the user to exist on your WordPress site. This will change the user's membership level or assign a level if they do not have an active level.", 'pmpro-zapier' ); ?></p>
+			</td>
+		</tr>
+
+		<!-- add_order -->
+		<tr>
+			<th scope="row"><?php esc_attr_e( 'add_order', 'pmpro-zapier' ); ?></th>
+			<td>
+				<p><strong><?php _e( 'Accepted Data: user_email, level_id, subtotal, tax, couponamount, total, payment_type, cardtype, accountnumber, expirationmonth, expirationyear, status, gateway, gateway_environment, payment_transaction_id, subscription_transaction_id, affiliate_id, affiliate_subid, notes, checkout_id, billing_name, billing_street, billing_city, billing_state, billing_zip, billing_country, billing_phone.', 'pmpro-zapier' ); ?></strong></p>
+				<p><?php _e( "This will create a new Paid Memberships Pro order for a user.", 'pmpro-zapier' ); ?></p>
+			</td>
+		</tr>
+
+		<!-- update order -->
+		<tr>
+			<th scope="row"><?php esc_attr_e( 'update_order', 'pmpro-zapier' ); ?></th>
+			<td>
+				<p><strong><?php _e( 'Accepted Data: user_email, level_id, subtotal, tax, couponamount, total, payment_type, cardtype, accountnumber, expirationmonth, expirationyear, status, gateway, gateway_environment, payment_transaction_id, subscription_transaction_id, affiliate_id, affiliate_subid, notes, checkout_id, billing_name, billing_street, billing_city, billing_state, billing_zip, billing_country, billing_phone.', 'pmpro-zapier' ); ?></strong></p>
+				<p><?php _e( 'This will update an existing Paid Memberships Pro order.', 'pmpro-zapier' ); ?></p>
+			</td>
+		</tr>
+
+		<!-- has_membership_level -->
+		<tr>
+			<th scope="row"><?php esc_attr_e( 'has_membership_level', 'pmpro-zapier' ); ?></th>
+			<td>
+				<p><strong><?php _e( 'Accepted Data: user_email, level_id.', 'pmpro-zapier' ); ?></strong></p>
+				<p><?php _e( "Check if an existing user currently has an active membership level.", 'pmpro-zapier' ); ?></p>
 			</td>
 		</tr>
 	</table>
