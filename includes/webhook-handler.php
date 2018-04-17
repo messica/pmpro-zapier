@@ -26,6 +26,13 @@ if ( $api_key != $pmproz_options['api_key'] ) {
 }
 
 zapier_webhook_log( __( 'Data Received', 'pmpro-zapier' ) . ': ' . var_export( $_REQUEST, true ) );
+
+// Bail if PMPro is not loaded
+if ( ! function_exists( 'pmpro_getParam' ) ) {
+	zapier_webhook_log( __( 'Paid Memberships Pro mustbe activated.', 'pmpro-zapier' ) );
+	zapier_ipn_exit();
+}
+
 switch ( $action ) {
 
 	case 'add_member':
