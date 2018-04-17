@@ -12,7 +12,7 @@ add_action( 'admin_menu', 'pmproz_admin_menu' );
  * Load the Zapier Settings page when the menu item is clicked on
  */
 function pmproz_add_submenu_page() {
-	require_once( PMPRO_DIR . '/adminpages/admin_header.php' );
+	require_once PMPRO_DIR . '/adminpages/admin_header.php';
 	?>
 	<div class="wrap">
 		<?php settings_errors(); ?>
@@ -27,8 +27,16 @@ function pmproz_add_submenu_page() {
 			}
 			?>
 			<h2 class="nav-tab-wrapper">
-				<a href="admin.php?page=pmpro-zapier" class="nav-tab<?php if ( empty( $account ) ) { ?> nav-tab-active<?php } ?>"><?php esc_attr_e( 'Send Data to Zapier (Triggers)', 'pmpro-zapier' ); ?></a>
-				<a href="admin.php?page=pmpro-zapier&account_settings=1" class="nav-tab<?php if ( ! empty( $account ) ) { ?> nav-tab-active<?php } ?>"><?php esc_attr_e( 'Receive Data From Zapier (Actions)', 'pmpro-zapier' ); ?></a>
+				<a href="admin.php?page=pmpro-zapier" class="nav-tab
+				<?php
+				if ( empty( $account ) ) {
+?>
+ nav-tab-active<?php } ?>"><?php esc_attr_e( 'Send Data to Zapier (Triggers)', 'pmpro-zapier' ); ?></a>
+				<a href="admin.php?page=pmpro-zapier&account_settings=1" class="nav-tab
+				<?php
+				if ( ! empty( $account ) ) {
+?>
+ nav-tab-active<?php } ?>"><?php esc_attr_e( 'Receive Data From Zapier (Actions)', 'pmpro-zapier' ); ?></a>
 			</h2>
 			<?php do_settings_sections( 'pmproz_options' ); ?>
 			<?php settings_fields( 'pmproz_options' ); ?>
@@ -39,8 +47,8 @@ function pmproz_add_submenu_page() {
 			?>
 		</form>
 	</div>
-	<?php 
-	require_once( PMPRO_DIR . '/adminpages/admin_footer.php' );
+	<?php
+	require_once PMPRO_DIR . '/adminpages/admin_footer.php';
 }
 
 /**
@@ -58,7 +66,7 @@ function pmproz_admin_init() {
 	register_setting( 'pmproz_options', 'pmproz_options', 'pmproz_options_validate' );
 
 	// Load settings for triggers.
-	if( ! $account ){
+	if ( ! $account ) {
 		add_settings_section( 'pmproz_settings_triggers', __( 'Triggers', 'pmpro-zapier' ), 'pmproz_settings_triggers', 'pmproz_options' );
 		// Add trigger fields.
 		add_settings_field( 'pmproz_settings_field_pmpro_added_order', __( 'New Order', 'pmpro-zapier' ), 'pmproz_settings_field_pmpro_added_order', 'pmproz_options', 'pmproz_settings_triggers' );
@@ -70,7 +78,7 @@ function pmproz_admin_init() {
 	}
 
 	// Load settings for account settings
-	if( $account ) {
+	if ( $account ) {
 		// Add sections.
 		add_settings_section( 'pmproz_settings_general', __( 'Account Settings', 'pmpro-zapier' ), 'pmproz_settings_general', 'pmproz_options' );
 		// Add general fields.
@@ -84,13 +92,13 @@ add_action( 'admin_init', 'pmproz_admin_init' );
  */
 function pmproz_options_validate( $input ) {
 
-	$new_input                                            = array();
-	$new_input['api_key']                                 = ! empty( $input['api_key'] ) ? sanitize_key( $input['api_key'] ) : '';
-	$new_input['pmpro_added_order']                       = ! empty( $input['pmpro_added_order'] ) ? intval( $input['pmpro_added_order'] ) : '';
-	$new_input['pmpro_updated_order']                     = ! empty( $input['pmpro_updated_order'] ) ? intval( $input['pmpro_updated_order'] ) : '';
-	$new_input['pmpro_after_change_membership_level']     = ! empty( $input['pmpro_after_change_membership_level'] ) ? intval( $input['pmpro_after_change_membership_level'] ) : '';
-	$new_input['pmpro_added_order_url']                   = ! empty( $input['pmpro_added_order_url'] ) ? esc_url( $input['pmpro_added_order_url'] ) : '';
-	$new_input['pmpro_updated_order_url']                 = ! empty( $input['pmpro_updated_order_url'] ) ? esc_url( $input['pmpro_updated_order_url'] ) : '';
+	$new_input                                        = array();
+	$new_input['api_key']                             = ! empty( $input['api_key'] ) ? sanitize_key( $input['api_key'] ) : '';
+	$new_input['pmpro_added_order']                   = ! empty( $input['pmpro_added_order'] ) ? intval( $input['pmpro_added_order'] ) : '';
+	$new_input['pmpro_updated_order']                 = ! empty( $input['pmpro_updated_order'] ) ? intval( $input['pmpro_updated_order'] ) : '';
+	$new_input['pmpro_after_change_membership_level'] = ! empty( $input['pmpro_after_change_membership_level'] ) ? intval( $input['pmpro_after_change_membership_level'] ) : '';
+	$new_input['pmpro_added_order_url']               = ! empty( $input['pmpro_added_order_url'] ) ? esc_url( $input['pmpro_added_order_url'] ) : '';
+	$new_input['pmpro_updated_order_url']             = ! empty( $input['pmpro_updated_order_url'] ) ? esc_url( $input['pmpro_updated_order_url'] ) : '';
 	$new_input['pmpro_after_change_membership_level_url'] = ! empty( $input['pmpro_after_change_membership_level_url'] ) ? esc_url( $input['pmpro_after_change_membership_level_url'] ) : '';
 
 	return $new_input;
@@ -137,7 +145,8 @@ function pmproz_settings_field_api_key() {
  */
 function pmproz_settings_field_pmpro_added_order() {
 	$pmproz_options = PMPro_Zapier::get_options();
-	$value = ! empty( $pmproz_options['pmpro_added_order'] ) ? $pmproz_options['pmpro_added_order'] : ''; ?>
+	$value          = ! empty( $pmproz_options['pmpro_added_order'] ) ? $pmproz_options['pmpro_added_order'] : '';
+	?>
 	<label for="pmpro_added_order">
 		<input type="checkbox" value=1 name="pmproz_options[pmpro_added_order]" id="pmpro_added_order" <?php checked( $value ); ?>>
 		<?php esc_attr_e( 'Update Zapier when a new order is added.', 'pmpro-zapier' ); ?>
@@ -150,7 +159,8 @@ function pmproz_settings_field_pmpro_added_order() {
  */
 function pmproz_settings_field_pmpro_added_order_url() {
 	$pmproz_options = PMPro_Zapier::get_options();
-	$value = ! empty( $pmproz_options['pmpro_added_order_url'] ) ? $pmproz_options['pmpro_added_order_url'] : ''; ?>
+	$value          = ! empty( $pmproz_options['pmpro_added_order_url'] ) ? $pmproz_options['pmpro_added_order_url'] : '';
+	?>
 	<input type="text" name="pmproz_options[pmpro_added_order_url]" size=60 value="<?php echo esc_attr( $value ); ?>">
 	<?php
 }
@@ -160,7 +170,7 @@ function pmproz_settings_field_pmpro_added_order_url() {
  */
 function pmproz_settings_field_pmpro_updated_order() {
 	$pmproz_options = PMPro_Zapier::get_options();
-	$value = ! empty( $pmproz_options['pmpro_updated_order'] ) ? $pmproz_options['pmpro_updated_order'] : '';
+	$value          = ! empty( $pmproz_options['pmpro_updated_order'] ) ? $pmproz_options['pmpro_updated_order'] : '';
 	?>
 	<label for="pmpro_updated_order">
 		<input type="checkbox" value=1 name="pmproz_options[pmpro_updated_order]" id="pmpro_updated_order" <?php checked( $value ); ?>>
@@ -174,7 +184,8 @@ function pmproz_settings_field_pmpro_updated_order() {
  */
 function pmproz_settings_field_pmpro_updated_order_url() {
 	$pmproz_options = PMPro_Zapier::get_options();
-	$value = ! empty( $pmproz_options['pmpro_updated_order_url'] ) ? $pmproz_options['pmpro_updated_order_url'] : ''; ?>
+	$value          = ! empty( $pmproz_options['pmpro_updated_order_url'] ) ? $pmproz_options['pmpro_updated_order_url'] : '';
+	?>
 	<input type="text" name="pmproz_options[pmpro_updated_order_url]" size=60 value="<?php echo esc_attr( $value ); ?>">
 	<?php
 }
@@ -184,7 +195,7 @@ function pmproz_settings_field_pmpro_updated_order_url() {
  */
 function pmproz_settings_field_pmpro_after_change_membership_level() {
 	$pmproz_options = PMPro_Zapier::get_options();
-	$value = !empty( $pmproz_options['pmpro_after_change_membership_level'] ) ? $pmproz_options['pmpro_after_change_membership_level'] : '';
+	$value          = ! empty( $pmproz_options['pmpro_after_change_membership_level'] ) ? $pmproz_options['pmpro_after_change_membership_level'] : '';
 	?>
 	<label for="pmpro_after_change_membership_level">
 		<input type="checkbox" value=1 name="pmproz_options[pmpro_after_change_membership_level]" id="pmpro_after_change_membership_level" <?php checked( $value ); ?>>
@@ -198,7 +209,7 @@ function pmproz_settings_field_pmpro_after_change_membership_level() {
  */
 function pmproz_settings_field_pmpro_after_change_membership_level_url() {
 	$pmproz_options = PMPro_Zapier::get_options();
-	$value = ! empty( $pmproz_options['pmpro_after_change_membership_level_url'] ) ? $pmproz_options['pmpro_after_change_membership_level_url'] : '';
+	$value          = ! empty( $pmproz_options['pmpro_after_change_membership_level_url'] ) ? $pmproz_options['pmpro_after_change_membership_level_url'] : '';
 	?>
 	<input type="text" name="pmproz_options[pmpro_after_change_membership_level_url]" size=60 value="<?php echo esc_attr( $value ); ?>">
 <?php } ?>
