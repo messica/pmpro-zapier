@@ -21,7 +21,7 @@ function pmproz_add_submenu_page() {
 			<p><?php printf( __( 'Integrate activity on your membership site with thousands of other apps via Zapier. <a href="%s" target="_blank">Read the documentation</a> for more information about this Add On.', 'pmpro-zapier' ), 'https://www.paidmembershipspro.com/add-ons/pmpro-zapier/' ); ?></p>
 			<?php
 			if ( isset( $_REQUEST['account_settings'] ) ) {
-				$account = $_REQUEST['account_settings'];
+				$account = (bool)$_REQUEST['account_settings'];
 			} else {
 				$account = false;
 			}
@@ -57,7 +57,7 @@ function pmproz_add_submenu_page() {
 function pmproz_admin_init() {
 	// check to see if the account_settings tab is being displayed.
 	if ( isset( $_REQUEST['account_settings'] ) ) {
-		$account = $_REQUEST['account_settings'];
+		$account = (bool)$_REQUEST['account_settings'];
 	} else {
 		$account = false;
 	}
