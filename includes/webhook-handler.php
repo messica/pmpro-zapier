@@ -38,12 +38,12 @@ if ( defined( 'PMPRO_ZAPIER_DEBUG' ) ) {
 	wp_mail( $log_email, get_option( "blogname" ) . " Zapier Log", nl2br( $logstr ) );			
 }
 
-zapier_ipn_log( 'Data Received:' . var_export($_REQUEST, true) );
+pmproz_zapier_ipn_log( 'Data Received:' . var_export($_REQUEST, true) );
 switch ( $action ) {
 
 	case 'add_member':
 
-		zapier_ipn_log( 'add member called successfully.' );
+		pmproz_zapier_ipn_log( 'add member called successfully.' );
 
 		// check for existing user
 		$user = pmproz_get_user_data();
@@ -112,18 +112,18 @@ switch ( $action ) {
 		// add membership level
 		if ( empty($pmpro_error) && pmpro_changeMembershipLevel( $level_id, $user_id, 'zapier_changed' ) ) {
 			echo json_encode( array( 'status' => 'success' ) );
-			zapier_ipn_log( 'changed level' );
+			pmproz_zapier_ipn_log( 'changed level' );
 		} else {
 
 			echo json_encode( array( 'status' => 'failed', 'message' => $pmpro_error ) );
-			zapier_ipn_log( $pmpro_error );
+			pmproz_zapier_ipn_log( $pmpro_error );
 		}
 
 		break;
 
 	case 'change_membership_level':
 
-		zapier_ipn_log( 'change membership level called successfully.' );
+		pmproz_zapier_ipn_log( 'change membership level called successfully.' );
 
 		//need a user id, login, or email address and a membership level id
 		$user = pmproz_get_user_data();
@@ -147,11 +147,11 @@ switch ( $action ) {
 		
 		if ( empty($pmpro_error) && pmpro_changeMembershipLevel( $level_id, $user_id, 'zapier_changed' ) ) {
 			echo json_encode( array( 'status' => 'success' ) );
-			zapier_ipn_log( 'changed level' );
+			pmproz_zapier_ipn_log( 'changed level' );
 		} else {
 
 			echo json_encode( array( 'status' => 'failed', 'message' => $pmpro_error ) );
-			zapier_ipn_log( $pmpro_error );
+			pmproz_zapier_ipn_log( $pmpro_error );
 		}
 
 		break;
@@ -274,7 +274,7 @@ switch ( $action ) {
 		break;
 }
 // write debug info to the text file.
-zapier_ipn_exit();
+pmproz_zapier_ipn_exit();
 
 /**
  * Helper function to retrieve the user object.
@@ -303,7 +303,7 @@ function pmproz_get_user_data(){
  *
  * @param string $s string to log to log file.
  */
-function zapier_ipn_log( $s ) {
+function pmproz_zapier_ipn_log( $s ) {
     global $logstr;
     $logstr .= "\t" . $s . "\n";
 }
@@ -312,7 +312,7 @@ function zapier_ipn_log( $s ) {
  * Output the log string to the text file and log what details are received.
  * Ensure PMPRO_ZAPIER_DEBUG_LOG is set to true
  */
-function zapier_ipn_exit() {
+function pmproz_zapier_ipn_exit() {
     global $logstr;
 
     if ( $logstr ) {
