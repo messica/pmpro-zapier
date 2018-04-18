@@ -23,6 +23,12 @@ class PMPro_Zapier {
 
 		// Load text domain.
 		load_plugin_textdomain( 'pmpro-zapier' );
+		
+		// Load the webhook if the param is passed.
+		if ( ! empty( $_REQUEST['pmpro_zapier_webhook'] ) ) {
+			require_once( PMPRO_ZAPIER_DIR . '/includes/webhook-handler.php' );
+			exit;
+		}
 	}
 
 	/**
@@ -47,6 +53,14 @@ class PMPro_Zapier {
 		return update_option( 'pmproz_options', $options, 'no' );
 	}
 
+	/**
+	 * Helper function to get the webhook URL
+	 */
+	static function get_webhook_url() {
+		$pmproz_options = PMPro_Zapier::get_options();
+		return add_query_arg( array( 'pmpro_zapier_webhook' => 1, 'api_key' => $pmproz_options['api_key'] ), home_url( '/', 'https' ) );
+	}
+	
 	/**
 	 * Send data to Zapier when an new order is added
 	 */

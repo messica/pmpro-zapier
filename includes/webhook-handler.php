@@ -1,11 +1,7 @@
 <?php
-
+// Don't access directly
 if ( ! defined( 'ABSPATH' ) ) {
-	global $isapage;
-	$isapage = true;
-
-	define( 'WP_USE_THEMES', false );
-	require_once '../../../../wp-load.php';
+	exit;
 }
 
 global $pmpro_error, $logstr;

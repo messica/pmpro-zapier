@@ -116,7 +116,7 @@ function pmproz_settings_general() {
 		<tr>
 			<th scope="row"><?php esc_attr_e( 'Webhook Handler', 'pmpro-zapier' ); ?></th>
 			<td>
-				<input type="text" readonly size="80" value="<?php echo esc_attr( PMPRO_ZAPIER_PLUGIN_URL ) . 'includes/webhook-handler.php?api_key=' . esc_attr( $pmproz_options['api_key'] ); ?>"><br/>
+				<input type="text" readonly size="80" value="<?php echo esc_attr( PMPro_Zapier::get_webhook_url() ); ?>"><br/>
 				<small><?php esc_attr_e( 'This is the Webhook URL used when passing data from Zapier to Paid Memberships Pro.', 'pmpro-zapier' ); ?></small>
 			</td>
 		</tr>
