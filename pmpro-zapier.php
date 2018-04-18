@@ -18,4 +18,5 @@ define( 'PMPRO_ZAPIER_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 require_once( PMPRO_ZAPIER_DIR . '/includes/admin.php' );
 require_once( PMPRO_ZAPIER_DIR . '/includes/class-pmpro-zapier.php' );
 require_once( PMPRO_ZAPIER_DIR . '/includes/settings.php' );
+require_once( PMPRO_ZAPIER_DIR . '/includes/webhook-handler.php' );
 
