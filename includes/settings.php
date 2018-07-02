@@ -1,3 +1,5 @@
+
+<<< master
 <?php
 /**
  * Add PMPro Zapier Settings page to the admin menu at Memberships > PMPro Zapier.
